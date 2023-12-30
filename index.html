@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Movie Searcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('C:/Users/fetal/Downloads/12345.jpg') center center/cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #ffffff00;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .movie-card {
+            margin: 20px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #movieResults,
+        #recommendedMovies {
+            margin-top: 20px;
+        }
+
+        #recommendedMovies h2 {
+            color: #00ff00;
+        }
+        .image-card {
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .image-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        .image-details img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-card" onclick="showImageDetails('black-clover-next-arc.jpg')" ondblclick="showDetails('Black Clover', 'The series focuses on Asta, a young orphan who is left to be raised in an orphanage alongside his fellow orphan, Yuno. While everyone is born with the ability to utilize mana in the form of magical power, Asta, with no magic instead focuses on physical strength. Conversely, Yuno was born as a prodigy with immense magical power and the talent to control wind magic.')">
+        <img src="image1.jpg" alt="Image 1">
+    </div>
+
+    <div class="image-card" onclick="showImageDetails('101079.jpg')" ondblclick="showDetails('One Piece', 'Description 2')">
+        <img src="image2.jpg" alt="Image 2">
+    </div>
+
+    <!-- Add more image cards as needed -->
+
+    <div class="image-details" id="imageDetails">
+        <h2 id="imageTitle"></h2>
+        <p id="imageDescription"></p>
+        <button onclick="hideImageDetails()">Close</button>
+    </div>
+    <script>
+        const apiKey = 'YOUR_TMDB_API_KEY'; // Replace with your TMDb API key
+
+// Function to fetch upcoming movies
+function getUpcomingMovies(pageNumber) {
+    const apiUrl = `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Upcoming Movies:', data.results);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Function to search for a movie by name
+function searchMovieByName(movieTitle) {
+    const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(movieTitle)}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Search Results:', data.results);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Function to get comprehensive information about a movie
+
+        // Function to fetch upcoming movies
+        function getUpcomingMovies(pageNumber) {
+            const apiUrl = `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Upcoming Movies:', data.results);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to search for a movie by name
+        function searchMovieByName(movieTitle) {
+            const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(movieTitle)}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Search Results:', data.results);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to get comprehensive information about a movie
+        function getMovieDetails(movieId) {
+            const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Movie Details:', data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to get similar movies based on the current viewed movie
+        function getSimilarMovies(movieId, pageNumber) {
+            const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Similar Movies:', data.results);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+// Example usage
+ // Example usage
+ getUpcomingMovies(1);
+        searchMovieByName('the avengers');
+        getMovieDetails(24428);
+        getSimilarMovies(24428, 1);
+
+        // Function to handle double-click on a movie card
+        function showMovieDetail(movieId) {
+            // Construct the TMDb API URL to get detailed information about the selected movie
+            const detailApiUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`;
+
+            fetch(detailApiUrl)
+        }
+    fetch(detailApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Display detailed information and similar movies on the detail page
+            displayMovieDetail(data);
+        })
+        .catch(error => console.error('Error:', error));
+
+
+// Function to display movie detail page
+function displayMovieDetail(movie) {
+    const movieTitle = document.getElementById('movieTitle');
+    const movieDetails = document.getElementById('movieDetails');
+    const similarMovies = document.getElementById('similarMovies');
+
+    // Set movie title
+    movieTitle.textContent = movie.Title;
+
+    // Display detailed information about the selected movie
+    movieDetails.innerHTML = `
+        <img src="${movie.Poster}" alt="${movie.Title}" />
+        <div>
+            <h3>${Black.Colver}</h3>
+            <p>${2024}</p>
+            <p>${movie.Plot}</p>
+            <!-- Add other relevant details -->
+        </div>
+    `;
+
+    // Display similar movies
+    similarMovies.innerHTML = '<h2>Similar Movies</h2>';
+    movie.Recommendations.forEach(similarMovie => {
+        const similarMovieCard = document.createElement('div');
+        similarMovieCard.classList.add('movie-card');
+        similarMovieCard.innerHTML = `
+            <img src="${similarMovie.Poster}" alt="${similarMovie.Title}" />
+            <div>
+                <h3>${similarMovie.Title}</h3>
+                <p>${similarMovie.Year}</p>
+            </div>
+        `;
+        // Add double-click event to navigate to the detail page for similar movies
+        similarMovieCard.addEventListener('dblclick', () => showMovieDetail(similarMovie.Title));
+        similarMovies.appendChild(similarMovieCard);
+    });
+
+    // Show the movie detail page
+    showDetailPage();
+}
+
+// Function to show the movie detail page
+function showDetailPage() {
+    // Hide the main page
+    document.querySelector('.container').style.display = 'none';
+    // Show the movie detail page
+    document.body.style.background = '#f0f0f0';
+    document.getElementById('movieTitle').style.color = '#333';
+    document.getElementById('movieDetails').style.marginTop = '20px';
+    document.getElementById('similarMovies').style.marginTop = '20px';
+}
+
+// Function to go back to the main page
+function goBack() {
+    // Show the main page
+    document.querySelector('.container').style.display = 'block';
+    // Hide the movie detail page
+    document.body.style.background = 'url(\'C:/Users/fetal/Downloads/12345.jpg\') center center/cover';
+    document.getElementById('movieTitle').style.color = '#ffffff';
+    document.getElementById('movieDetails').innerHTML = '';
+    document.getElementById('similarMovies').innerHTML = '';
+}
+
+// ... (Your existing code)
+
+
+        function searchMovies() {
+            const searchInput = document.getElementById('searchInput').value;
+
+            if (!searchInput) {
+                alert('Please enter a movie title');
+                return;
+            }
+
+            const apiUrl = `http://www.omdbapi.com/?s=${searchInput}&apikey=${apiKey}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayMovies(data.Search, 'movieResults');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayMovies(movies, containerId) {
+            const movieResults = document.getElementById(containerId);
+            movieResults.innerHTML = '';
+
+            if (!movies) {
+                movieResults.innerHTML = '<p>No results found</p>';
+                return;
+            }
+
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.classList.add('movie-card');
+
+                movieCard.innerHTML = `
+                    <img src="${movie.Poster}" alt="${movie.Title}" />
+                    <div>
+                        <h3>${movie.Title}</h3>
+                        <p>${movie.Year}</p>
+                    </div>
+                `;
+
+                movieResults.appendChild(movieCard);
+            });
+        }
+
+      // Function to create and return an image element with a specific size
+function createImageElement(src, alt, width, height) {
+    const imgElement = document.createElement('img');
+    imgElement.src = src;
+    imgElement.alt = alt;
+    imgElement.width = width;
+    imgElement.height = height;
+    return imgElement;
+}
+// Function to display movies
+function displayMovies(movies, containerId) {
+    const movieResults = document.getElementById(containerId);
+    movieResults.innerHTML = '';
+
+    if (!movies) {
+        movieResults.innerHTML = '<p>No results found</p>';
+        return;
+    }
+
+    movies.forEach(movie => {
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card');
+
+        movieCard.innerHTML = `
+            <img src="${movie.Poster}" alt="${movie.Title}" />
+            <div>
+                <h3>${movie.Title}</h3>
+                <p>${movie.Year}</p>
+            </div>
+        `;
+
+        // Add double-click event to show movie detail page
+        movieCard.addEventListener('dblclick', () => showMovieDetail(movie.Title));
+
+        movieResults.appendChild(movieCard);
+    });
+}
+
+// Function to display recommended movies
+function displayRecommendedMovies() {
+    const recommendedMovies = [
+        { Title: 'One Piece', Year: '2023', Poster: '101079.jpg' },
+        { Title: 'Black Clover', Year: '2024', Poster: 'black-clover-next-arc.jpg' },
+        { Title: 'Solo Leveling', Year: '2024', Poster: '31477.jpeg' },
+    ];
+
+    // Container to hold recommended movies
+    const recommendedMoviesContainer = document.getElementById('recommendedMovies');
+    
+    // Loop through recommended movies and create image elements
+    recommendedMovies.forEach(movie => {
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card');
+
+        // Create and append image element with a specific size
+        const posterImage = createImageElement(movie.Poster, `${movie.Title} Poster`, 150, 200); // Set width and height as needed
+        movieCard.appendChild(posterImage);
+
+        // Create and append title and year elements (you can customize this part)
+        const movieInfo = document.createElement('div');
+        const title = document.createElement('h3');
+        const year = document.createElement('p');
+        
+        title.textContent = movie.Title;
+        year.textContent = movie.Year;
+        
+        movieInfo.appendChild(title);
+        movieInfo.appendChild(year);
+
+        movieCard.appendChild(movieInfo);
+
+        // Append the movie card to the container
+        recommendedMoviesContainer.appendChild(movieCard);
+    });
+}
+// Call the function to display recommended movies
+displayRecommendedMovies();
+function showImageDetails(imageSrc) {
+            const imageDetails = document.getElementById('imageDetails');
+            const imageTitle = document.getElementById('imageTitle');
+            const imageDescription = document.getElementById('imageDescription');
+
+            // Set image source
+            const imgElement = document.createElement('img');
+            imgElement.src = imageSrc;
+            imgElement.alt = 'Image Details';
+            
+            // Set image details
+            imageTitle.textContent = 'Image Title';
+            imageDescription.textContent = 'Image Description';
+
+            // Display image details
+            imageDetails.style.display = 'block';
+            imageDetails.appendChild(imgElement);
+        }
+
+        function showDetails(title, description) {
+            const imageTitle = document.getElementById('imageTitle');
+            const imageDescription = document.getElementById('imageDescription');
+
+            // Set image details
+            imageTitle.textContent = title;
+            imageDescription.textContent = description;
+        }
+
+        function hideImageDetails() {
+            const imageDetails = document.getElementById('imageDetails');
+            const imageTitle = document.getElementById('imageTitle');
+            const imageDescription = document.getElementById('imageDescription');
+
+            // Clear image details
+            imageTitle.textContent = '';
+            imageDescription.textContent = '';
+
+            // Hide image details
+            imageDetails.style.display = 'none';
+
+            // Remove the image element
+            const imgElement = imageDetails.querySelector('img');
+            if (imgElement) {
+                imageDetails.removeChild(imgElement);
+            }
+        }
+    </script>
+    <div class="container">
+        <h1>Movie Searcher</h1>
+        <input type="text" id="searchInput" placeholder="Enter a movie title">
+        <button onclick="searchMovies()">Search</button>
+        <div id="movieResults"></div>
+
+        <!-- Recommended Movies Section -->
+        <div id="recommendedMovies">
+            <h2>Recommended Movies</h2>
+            <!-- Call the function to display recommended movies -->
+            <script>displayRecommendedMovies();</script>
+        </div>
+    </div>
+</body>
+</html>
